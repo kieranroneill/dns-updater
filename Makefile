@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: build dev format install test
+.PHONY: build dev format install install_modules install_tools postinstall test
 
 all: install
 
@@ -9,11 +9,18 @@ all: install
 ###
 
 install:
-	@echo ">>> installing dependencies"
+	$(MAKE) install_tools
+	$(MAKE) install_modules
+	$(MAKE) postinstall
+
+install_modules:
+	@echo ">>> installing modules"
+	go mod tidy
+
+install_tools:
+	@echo ">>> installing tools"
 	go install github.com/conventionalcommit/commitlint@latest
 	go install github.com/githubnemo/CompileDaemon@latest
-	go mod tidy
-	${MAKE} postinstall
 
 postinstall:
 	@echo ">>> setting up git hooks"
