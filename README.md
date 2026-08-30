@@ -23,7 +23,7 @@
 </h1>
 
 <p align="center">
-  Small application to update the DigitalOcean DNS records with the current public IP address.
+  Application to update a DigitalOcean DNS record with the current public IP address.
 </p>
 
 #### Table of contents
