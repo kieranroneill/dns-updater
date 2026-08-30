@@ -1,0 +1,21 @@
+name: 'Pull Request: Checks'
+
+on:
+  pull_request:
+
+jobs:
+  ##
+  # test
+  ##
+
+  test:
+    name: 'Test'
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+      - name: '🛎 Checkout'
+        uses: actions/checkout@v4
+      - name: '🦫 Setup Golang'
+        uses: ./.github/actions/use-go-dependencies
+      - name: '🧪 Test'
+        run: make test
