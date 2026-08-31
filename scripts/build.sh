@@ -4,7 +4,7 @@ SCRIPT_DIR=$(dirname "${0}")
 
 source "${SCRIPT_DIR}/utilities/_set_vars.sh"
 
-# Public: Builds the Go app with the version from the VERSION file.
+# Public: Builds the Go application with the version from the VERSION file injected to the `./.build/<os>-<arch>/dns-updater`.
 #
 # See https://go.dev/doc/install/source#environment for a list of supported OS/arch combos.
 #
