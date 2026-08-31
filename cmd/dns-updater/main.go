@@ -14,7 +14,7 @@ import (
 var Version string
 
 func main() {
-	var lineCount int64
+	var lineCountFlag int64
 
 	logger, err := _utilitieslogging.NewLogger()
 	if err != nil {
@@ -32,12 +32,12 @@ func main() {
 	logCommand := _commands.NewLogCommand(logger)
 
 	// add flags
-	logCommand.Flags().Int64VarP(&lineCount, "lineCount", "l", 50, "The amount of lines to display. Defaults to 50.")
+	logCommand.Flags().Int64VarP(&lineCountFlag, "lineCount", "l", 50, "The amount of lines to display. Defaults to 50.")
 
 	// add commands
 	rootCommand.AddCommand(logCommand)
 
-	if err := rootCommand.Execute(); err != nil {
+	if err = rootCommand.Execute(); err != nil {
 		_, _ = fmt.Fprintln(os.Stderr, err)
 
 		os.Exit(1)
