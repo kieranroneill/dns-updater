@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: build dev format install install_modules install_tools postinstall test
+.PHONY: build format install install_modules install_tools postinstall test
 
 all: install
 
@@ -20,21 +20,17 @@ install_modules:
 install_tools:
 	@echo ">>> installing tools"
 	go install github.com/conventionalcommit/commitlint@latest
-	go install github.com/githubnemo/CompileDaemon@latest
 
 postinstall:
 	@echo ">>> setting up git hooks"
 	git config core.hooksPath "${PWD}/.hooks"
 
 ###
-# app
+# build
 ###
 
 build:
 	${PWD}/scripts/build.sh
-
-dev:
-	${PWD}/scripts/dev.sh
 
 ###
 # formatting

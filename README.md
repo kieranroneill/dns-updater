@@ -62,13 +62,16 @@ The project structure is based on the layout outlined in [golang-standards/proje
 
 ### 3.1. Useful commands
 
-| Command        | Description                                                                             |
-|----------------|-----------------------------------------------------------------------------------------|
-| `make build`   | Builds and packages the application to `dist/dns-updater-<os>-<arch>-<version>.tar.gz`. |
-| `make dev`     | Runs in development mode - builds and watches.                                          |
-| `make format`  | Formats Go files.                                                                       |
-| `make install` | Installs the development tools and downloads the Go modules.                            |
-| `make test`    | Runs tests.                                                                             |
+| Command                | Description                                                                 |
+|------------------------|-----------------------------------------------------------------------------|
+| `make build`           | Builds the CLI binary to `.build/<os>-<arch>/dns-updater`.                  |
+| `make package`         | Packages the CLI binary to `dist/dns-updater-<os>-<arch>-<version>.tar.gz`. |
+| `make format`          | Formats Go files.                                                           |
+| `make install`         | Installs tools, downloads required Go modules and sets up Git hooks.        |
+| `make install_modules` | Installs the required Go modules.                                           |
+| `make install_tools`   | Installs tools.                                                             |
+| `make postinstall`     | Sets up Git hooks.                                                          |
+| `make test`            | Runs tests.                                                                 |
 
 <sup>[Back to top ^][table-of-contents]</sup>
 
