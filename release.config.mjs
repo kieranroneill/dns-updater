@@ -28,7 +28,7 @@ export default {
           // windows
           'windows-amd64',
           'windows-arm64',
-        ].map((platform) => `./scripts/build.sh "${platform}"`).join(' && '),
+        ].map((platform) => `./scripts/build.sh "${platform}" && ./scripts/package.sh "${platform}"`).join(' && '),
       },
     ],
     [

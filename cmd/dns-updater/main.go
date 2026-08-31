@@ -2,20 +2,44 @@ package main
 
 import (
 	"fmt"
-	"log/slog"
+	"log"
+	"os"
 
-	_utilitiesconfigs "github.com/kieranroneill/dns-updater/internal/utilities/configs"
+	_commands "github.com/kieranroneill/dns-updater/internal/commands"
+	_constants "github.com/kieranroneill/dns-updater/internal/constants"
 	_utilitieslogging "github.com/kieranroneill/dns-updater/internal/utilities/logging"
+	"github.com/spf13/cobra"
 )
 
 var Version string
 
 func main() {
-	config := _utilitiesconfigs.CreateConfig(Version)
+	var lineCountFlag int64
 
-	// config logger
-	slog.SetLogLoggerLevel(_utilitieslogging.ParseLogLevel(config.LogLevel))
+	logger, err := _utilitieslogging.NewLogger()
+	if err != nil {
+		log.Fatalf("failed to create logger: %v", err)
+	}
 
-	slog.Info(fmt.Sprintf("Log level: %s", config.LogLevel))
-	slog.Info(fmt.Sprintf("Version: %s", config.Version))
+	rootCommand := &cobra.Command{
+		Use:     "dns-updater",
+		Short:   _constants.AppShortDescription,
+		Long:    _constants.AppLongDescription,
+		Version: Version,
+	}
+
+	// create commands
+	logCommand := _commands.NewLogCommand(logger)
+
+	// add flags
+	logCommand.Flags().Int64VarP(&lineCountFlag, "lineCount", "l", 50, "The amount of lines to display. Defaults to 50.")
+
+	// add commands
+	rootCommand.AddCommand(logCommand)
+
+	if err = rootCommand.Execute(); err != nil {
+		_, _ = fmt.Fprintln(os.Stderr, err)
+
+		os.Exit(1)
+	}
 }
