@@ -14,7 +14,7 @@ source "${SCRIPT_DIR}/utilities/_set_vars.sh"
 #
 # Returns exit code 0 if successful, or 1 if the semantic version is incorrectly formatted.
 function main() {
-  set_vars
+  _set_vars
 
   if [ -z "${1}" ]; then
     printf "%b no version specified, use: ./scripts/update_version_file.sh [version] \n" "${ERROR_PREFIX}"

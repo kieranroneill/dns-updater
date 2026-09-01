@@ -8,11 +8,11 @@ import (
 	"path/filepath"
 	"strconv"
 
-	_utilitieslogging "github.com/kieranroneill/dns-updater/internal/utilities/logging"
+	_dtos "github.com/kieranroneill/dns-updater/internal/dtos"
 	"github.com/spf13/cobra"
 )
 
-func NewLogCommand(logger *_utilitieslogging.Logger) *cobra.Command {
+func NewLogCommand(settings *_dtos.Settings) *cobra.Command {
 	return &cobra.Command{
 		Use:   "log",
 		Short: "Show recent logs",
@@ -21,7 +21,7 @@ func NewLogCommand(logger *_utilitieslogging.Logger) *cobra.Command {
 			log.Print(fmt.Sprintf("%v", cmd.Flag("lineCount").Value))
 			var buf []string
 
-			file, err := os.Open(filepath.Clean(logger.FilePath()))
+			file, err := os.Open(filepath.Clean(settings.LogPath))
 			if err != nil {
 				// the no log file not existing is an acceptable error
 				if os.IsNotExist(err) {
