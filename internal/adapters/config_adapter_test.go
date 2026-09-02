@@ -16,7 +16,7 @@ var config = _dtos.Config{
 	Domain: "example.com",
 	Record: _dtos.RecordConfig{
 		ID:   1337,
-		Name: "example.com",
+		Name: "sub",
 		Type: "A",
 	},
 }

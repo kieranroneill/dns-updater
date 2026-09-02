@@ -5,5 +5,5 @@ domain: "example.com"
 
 record:
   id: 1337
-  name: "example.com"
+  name: "sub"
   type: "A"

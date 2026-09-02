@@ -41,10 +41,10 @@ func GetFlagOrInput(cmd *cobra.Command, flagName string, reader *bufio.Reader, p
 			return value, nil
 		}
 
-    // the default value for int flags will be -1, so we need to handle it
+		// the default value for int flags will be -1, so we need to handle it
 		value = ""
 
-    break
+		break
 	default:
 		break
 	}
