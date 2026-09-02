@@ -17,8 +17,6 @@ import (
 var Version string
 
 func main() {
-	var lineCountFlag int64
-
 	configDirectory, err := _utilitiesapplication.ConfigDirectory()
 	if err != nil {
 		log.Fatalf("failed to get config path: %v", err)
@@ -47,8 +45,13 @@ func main() {
 	loginCommand := _commands.NewLoginCommand(settings, logger)
 	runCommand := _commands.NewRunCommand(settings, logger)
 
-	// add flags
-	logCommand.Flags().Int64VarP(&lineCountFlag, "lineCount", "l", 50, "The amount of lines to display. Defaults to 50.")
+	// add log command flags
+	logCommand.Flags().Int64P("lineCount", "l", 50, "The amount of lines to display. Defaults to 50.")
+	// add login command flags
+	loginCommand.Flags().String("token", "", "The personal API token to use for authentication.")
+	loginCommand.Flags().String("domain", "", "The domain of the record.")
+	loginCommand.Flags().Int("id", -1, "The ID of the record.")
+	loginCommand.Flags().String("name", "", "The name of the record.")
 
 	// add commands
 	rootCommand.AddCommand(

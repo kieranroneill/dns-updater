@@ -32,7 +32,10 @@ func NewDigitalOceanAdapter(token string) *DigitalOceanAdapter {
 //   - The domain record, or nil if no record is found.
 //   - An error if there was an issue sending the request.
 func (do *DigitalOceanAdapter) DomainRecordByNameAndType(ctx context.Context, domain string, name string, recordType string) (*godo.DomainRecord, error) {
-	records, _, err := do.client.Domains.Records(ctx, domain, nil)
+	records, _, err := do.client.Domains.Records(ctx, domain, &godo.ListOptions{
+		Page:    1,
+		PerPage: 200,
+	})
 	if err != nil {
 		return nil, err
 	}

@@ -24,41 +24,48 @@ func NewLoginCommand(settings *_dtos.Settings, logger *_adapters.LogAdapter) *co
 			var record *godo.DomainRecord
 
 			reader := bufio.NewReader(os.Stdin)
-
-			apiTokenInput, err := _utilitiesterminal.PromptSecret(reader, "DigitalOcean API token: ")
+			apiTokenInput, err := _utilitiesterminal.GetFlagOrInput(cmd, "token", reader, "DigitalOcean API token: ", true)
 			if err != nil {
 				logger.Error(err.Error())
 				return err
 			}
+
+			apiTokenInput = strings.TrimSpace(apiTokenInput)
+
 			if apiTokenInput == "" {
 				return fmt.Errorf("api token cannot be empty")
 			}
 
-			domainInput, err := _utilitiesterminal.Prompt(reader, "Domain (e.g. example.com): ")
+			domainInput, err := _utilitiesterminal.GetFlagOrInput(cmd, "domain", reader, "Domain (e.g. example.com): ", false)
 			if err != nil {
 				logger.Error(err.Error())
 				return err
 			}
+
 			domainInput = strings.TrimSpace(domainInput)
+
 			if domainInput == "" {
 				return fmt.Errorf("domain cannot be empty")
 			}
 
-			recordNameInput, err := _utilitiesterminal.Prompt(reader, "Record name (e.g. home for home.example.com): ")
+			recordNameInput, err := _utilitiesterminal.GetFlagOrInput(cmd, "name", reader, `Record name (e.g. "sub" for "sub.example.com", or "@" for "example.com"): `, false)
 			if err != nil {
 				logger.Error(err.Error())
 				return err
 			}
+
 			recordNameInput = strings.TrimSpace(recordNameInput)
+
 			if recordNameInput == "" {
 				return fmt.Errorf("record name cannot be empty")
 			}
 
-			recordIDInput, err := _utilitiesterminal.Prompt(reader, "Record ID (leave empty to auto-detect): ")
+			recordIDInput, err := _utilitiesterminal.GetFlagOrInput(cmd, "id", reader, "Record ID (leave empty to auto-detect): ", false)
 			if err != nil {
 				logger.Error(err.Error())
 				return err
 			}
+
 			recordIDInput = strings.TrimSpace(recordIDInput)
 
 			ctx := context.Background()
@@ -66,7 +73,7 @@ func NewLoginCommand(settings *_dtos.Settings, logger *_adapters.LogAdapter) *co
 
 			// if no record id was supplied, try and fetch it using the do api
 			if recordIDInput == "" {
-				record, err = doClient.DomainRecordByNameAndType(ctx, domainInput, recordIDInput, "A")
+				record, err = doClient.DomainRecordByNameAndType(ctx, domainInput, recordNameInput, "A")
 				if err != nil {
 					err = fmt.Errorf("failed to auto-detect record ID: %w", err)
 					logger.Error(err.Error())
@@ -78,14 +85,14 @@ func NewLoginCommand(settings *_dtos.Settings, logger *_adapters.LogAdapter) *co
 			if recordIDInput != "" {
 				id, err := strconv.Atoi(recordIDInput)
 				if err != nil {
-					err = fmt.Errorf(`invalid record id "%s" supplied: %w`, recordIDInput, err)
+					err = fmt.Errorf(`invalid record id %s supplied: %w`, recordIDInput, err)
 					logger.Error(err.Error())
 					return err
 				}
 
 				record, err = doClient.DomainRecordByID(ctx, domainInput, id)
 				if err != nil {
-					err = fmt.Errorf(`failed to get domain record "%s": %w`, recordIDInput, err)
+					err = fmt.Errorf(`failed to get domain record %s: %w`, recordIDInput, err)
 					logger.Error(err.Error())
 					return err
 				}
@@ -93,9 +100,7 @@ func NewLoginCommand(settings *_dtos.Settings, logger *_adapters.LogAdapter) *co
 
 			// check the record actually exists
 			if record == nil {
-				err = fmt.Errorf(`unable to find record: %w`, err)
-				logger.Error(err.Error())
-				return err
+				return fmt.Errorf("unable to find record %s on domain %s", recordNameInput, domainInput)
 			}
 
 			config := &_dtos.Config{
@@ -115,7 +120,7 @@ func NewLoginCommand(settings *_dtos.Settings, logger *_adapters.LogAdapter) *co
 				return fmt.Errorf("failed to save config: %w", err)
 			}
 
-			logger.Info("Login configuration saved successfully.")
+			logger.Info(`login configuration saved successfully to "%s".`, settings.ConfigPath)
 
 			return nil
 		},
