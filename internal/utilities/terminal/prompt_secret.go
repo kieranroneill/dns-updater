@@ -6,7 +6,7 @@ import (
 	"strings"
 	"syscall"
 
-  "golang.org/x/term"
+	"golang.org/x/term"
 )
 
 func PromptSecret(r *bufio.Reader, label string) (string, error) {

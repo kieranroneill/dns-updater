@@ -98,14 +98,20 @@ func NewLoginCommand(settings *_dtos.Settings, logger *_adapters.LogAdapter) *co
 				return err
 			}
 
-			cfg := &config.Config{
-				Domain:     domainInput,
-				RecordName: recordNameInput,
-				RecordID:   recordID,
-				APIToken:   apiTokenInput,
+			config := &_dtos.Config{
+				Auth: _dtos.AuthConfig{
+					APIToken: apiTokenInput,
+				},
+				Domain: domainInput,
+				Record: _dtos.RecordConfig{
+					ID:   record.ID,
+					Name: record.Name,
+					Type: record.Type,
+				},
 			}
+			configAdapter := _adapters.NewConfigAdapter(settings.ConfigPath)
 
-			if err := config.SaveConfig(cfg); err != nil {
+			if err := configAdapter.SetConfig(config); err != nil {
 				return fmt.Errorf("failed to save config: %w", err)
 			}
 

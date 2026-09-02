@@ -1,0 +1,9 @@
+auth:
+  api_token: "super-secret"
+
+domain: "example.com"
+
+record:
+  id: 1337
+  name: "example.com"
+  type: "A"
